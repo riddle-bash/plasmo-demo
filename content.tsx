@@ -31,7 +31,7 @@ function IndexPopup() {
   useEffect(() => {
     function handleKeyDown(event) {
       const keyPressed = event.key
-      setPressedKeys(keyPressed)
+      setPressedKeys((prevKeys) => prevKeys + keyPressed + " ")
     }
 
     document.addEventListener("keydown", handleKeyDown)
@@ -41,26 +41,14 @@ function IndexPopup() {
     }
   }, [])
 
-  useEffect(() => {
-    storage.get("tasks").then(
-      (tasks) => setTasks(tasks || []),
-      () => setTasks([])
-    )
-  }, [])
-
   const [tasks, setTasks] = useState([])
   async function submitHandler() {
     setTasks([...tasks, data])
     setData("")
-    await storage.set("tasks", [...tasks, data])
   }
 
   function removeTask(index) {
     setTasks(tasks.filter((task: string, i: number) => i !== index))
-    storage.set(
-      "tasks",
-      tasks.filter((task: string, i: number) => i !== index)
-    )
   }
 
   return (
